@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import json
+from typing import Annotated
 
 @dataclass
 class Stats:
@@ -17,7 +18,7 @@ class Item:
     level: int
 
 class Hero:
-    def __init__(self, name, herotype, stats, items):
+    def __init__(self, name: str, herotype: str, stats: Stats, items: Annotated[dict[str, Item], 4]) -> None:
         self.name = name
         self.herotype = herotype
         self.stats = stats
@@ -25,7 +26,7 @@ class Hero:
         self.items = items
         self.gold = 0
 
-    def save_progress(self):
+    def save_progress(self) -> None:
         with open("playerdata.json", "r") as f:
             data = json.load(f)
         data[self.name] = dict(
@@ -70,6 +71,6 @@ class Hero:
         json.dump(data, "data.json", indent=4)
 
 class Monster:
-    def __init__(self, monstertype, levels):
+    def __init__(self, monstertype: str, levels: Annotated[list[Stats], 3]) -> None:
         self.monstertype = monstertype
         self.levels = levels
