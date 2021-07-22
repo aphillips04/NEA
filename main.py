@@ -5,7 +5,6 @@ from classes import *
 #     "range": Item("God Bow", "imgs/godbow.png", 1000), "mana": Item("God Staff", "imgs/godstaff.png", 1000), "defence": Item("God Armour", "imgs/godarmour.png", 1000)});TEST.xp = 1000;TEST.gold = 1000
 # TEST.save_progress()
 
-
 def load_player_data(name: str) -> Hero:
     with open("playerdata.json", "r") as f:
         data = json.load(f)
@@ -21,34 +20,6 @@ with open("playerdata.json", "r+") as f:
     if not f.read():
         json.dump({}, f, indent=4)
 
-"""
-heros = [
-    Hero(None, "Mage", Stats("imgs/mage.", 1, ), dict(
-        close = Item("", "imgs/", 1),
-        range = Item("", "imgs/", 1),
-        mana = Item("", "imgs/", 1),
-        defence = Item("", "imgs/", 1)
-    )),
-    Hero(None, "Warrior", Stats("imgs/warrior.", 1, ), dict(
-        close = Item("", "imgs/", 1),
-        range = Item("", "imgs/", 1),
-        mana = Item("", "imgs/", 1),
-        defence = Item("", "imgs/", 1)
-    )),
-    Hero(None, "", Stats("imgs/", 1, ), dict(
-        close = Item("", "imgs/", 1),
-        range = Item("", "imgs/", 1),
-        mana = Item("", "imgs/", 1),
-        defence = Item("", "imgs/", 1)
-    )),
-    Hero(None, "", Stats("imgs/", 1, ), dict(
-        close = Item("", "imgs/", 1),
-        range = Item("", "imgs/", 1),
-        mana = Item("", "imgs/", 1),
-        defence = Item("", "imgs/", 1)
-    ))
-]
-
 monsters = [
     Monster("Skeleton", [Stats(1, "imgs/skeleton."), Stats(2, "imgs/skeleton."), Stats(3, "imgs/skeleton.")]),
     Monster("Orc", [Stats(1, "imgs/orc."), Stats(2, "imgs/orc."), Stats(3, "imgs/orc.")]),
@@ -61,4 +32,4 @@ bosses = [
     Monster("Dragon", [Stats(1, "imgs/dragon."), Stats(2, "imgs/dragon."), Stats(3, "imgs/dragon.")]),
     Monster("Demon", [Stats(1, "imgs/demon."), Stats(2, "imgs/demon."), Stats(3, "imgs/demon.")]),
     Monster("Basalisk", [Stats(1, "imgs/basalisk."), Stats(2, "imgs/basalisk."), Stats(3, "imgs/basalisk.")])
-]"""
+]
