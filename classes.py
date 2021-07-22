@@ -32,6 +32,28 @@ class Hero:
         data[self.name] = dict(
             herotype = self.herotype,
             stats = dict(
+                icon = self.stats.icon,
+                level = self.stats.level,
+                strength = self.stats.strength,
+                agility = self.stats.agility,
+                mana = self.stats.mana,
+                health = self.stats.health
+            ),
+            xp = self.xp,
+            items = {key: dict(
+                itemtype = self.items[key].itemtype,
+                icon = self.items[key].icon,
+                level = self.items[key].level
+            ) for key in ("close", "range", "mana", "defence")},
+            gold = self.gold
+        )
+        with open("playerdata.json", "w") as f:
+            json.dump(data, f, indent=4)
+    
+    def __repr__(self):
+        return str(json.dumps(dict(
+            herotype = self.herotype,
+            stats = dict(
                 level = self.stats.level,
                 icon = self.stats.icon,
                 strength = self.stats.strength,
@@ -40,35 +62,13 @@ class Hero:
                 health = self.stats.health
             ),
             xp = self.xp,
-            items = dict(
-                dict(
-                    name = self.items[0].name,
-                    type = self.items[0].itemtype,
-                    icon = self.items[0].icon,
-                    level = self.items[0].level,
-                ),
-                dict(
-                    name = self.items[1].name,
-                    type = self.items[1].itemtype,
-                    icon = self.items[1].icon,
-                    level = self.items[1].level,
-                ),
-                dict(
-                    name = self.items[2].name,
-                    type = self.items[2].itemtype,
-                    icon = self.items[2].icon,
-                    level = self.items[2].level,
-                ),
-                dict(
-                    name = self.items[3].name,
-                    type = self.items[3].itemtype,
-                    icon = self.items[3].icon,
-                    level = self.items[3].level,
-                )
-            ),
+            items = {key: dict(
+                itemtype = self.items[key].itemtype,
+                icon = self.items[key].icon,
+                level = self.items[key].level
+            ) for key in ("close", "range", "mana", "defence")},
             gold = self.gold
-        )
-        json.dump(data, "data.json", indent=4)
+        )))
 
 class Monster:
     def __init__(self, monstertype: str, levels: Annotated[list[Stats], 3]) -> None:
