@@ -1,1 +1,37 @@
-{}
+{
+  "Dev": {
+    "herotype": "God",
+    "stats": {
+      "icon": "imgs/god.png",
+      "level": 1000,
+      "strength": 100,
+      "agility": 100,
+      "mana": 100,
+      "health": null
+    },
+    "xp": true,
+    "items": {
+      "close": {
+        "itemtype": "God Sword",
+        "icon": "imgs/godsword.png",
+        "level": 1000
+      },
+      "range": {
+        "itemtype": "God Bow",
+        "icon": "imgs/godbow.png",
+        "level": 1000
+      },
+      "mana": {
+        "itemtype": "God Staff",
+        "icon": "imgs/godstaff.png",
+        "level": 1000
+      },
+      "defence": {
+        "itemtype": "God Armour",
+        "icon": "imgs/godarmour.png",
+        "level": 1000
+      }
+    },
+    "gold": 1000
+  }
+}
