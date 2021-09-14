@@ -21,42 +21,42 @@ with open("playerdata.json", "r+") as f:
         json.dump({}, f, indent=4)
 
 heros = [
-    Hero(None, "Mage", Stats("img/mage.", 1, 2, 3, 5), dict(
+    Hero(None, "Mage", Stats("imgs/mage.png", 1, 2, 3, 5, 10), dict(
         close = None,
-        range = Item("Bow", "img/bow.", 1),
-        mana = Item("Wand", "img/wand.", 1),
-        defence = Item("Leather", "img/leather.", 1)
+        range = Item("Bow", "imgs/bow.png", 1),
+        mana = Item("Wand", "imgs/wand.png", 2),
+        defence = Item("Leather", "imgs/leather.png", 1)
     )),
-    Hero(None, "Paladin", Stats("img/paladin.", 1, 4, 4, 2), dict(
-        close = Item("Short Sword", "img/short_sword.", 1),
+    Hero(None, "Paladin", Stats("imgs/paladin.png", 1, 4, 4, 2, 10), dict(
+        close = Item("Short Sword", "imgs/short_sword.png", 1),
         range = None,
-        mana = Item("Amulet", "img/amulet.", 1),
-        defence = Item("Shield", "img/shield.", 1)
+        mana = Item("Amulet", "imgs/amulet.png", 1),
+        defence = Item("Shield", "imgs/shield.png", 2)
     )),
-    Hero(None, "Barbarian", Stats("img/barbarian.", 1, 5, 4, 1), dict(
-        close = Item("Sword", "img/sword.", 1),
+    Hero(None, "Barbarian", Stats("imgs/barbarian.png", 1, 5, 4, 1, 10), dict(
+        close = Item("Sword", "imgs/sword.png", 2),
         range = None,
-        mana = Item("Amulet", "img/amulet.", 1),
-        defence = Item("Leather", "img/leather.", 1)
+        mana = Item("Amulet", "imgs/amulet.png", 1),
+        defence = Item("Leather", "imgs/leather.png", 1)
     )),
-    Hero(None, "Rogue", Stats("img/rogue.", 1, 2, 5, 3), dict(
+    Hero(None, "Rogue", Stats("imgs/rogue.png", 1, 2, 5, 3, 10), dict(
         close = None,
-        range = Item("Crossbow", "img/crossbow.", 1),
-        mana = Item("Amulet", "img/amulet.", 1),
-        defence = Item("Leather", "img/leather.", 1)
+        range = Item("Crossbow", "imgs/crossbow.png", 2),
+        mana = Item("Amulet", "imgs/amulet.png", 1),
+        defence = Item("Leather", "imgs/leather.png", 1)
     ))
 ]
 
 monsters = [
-    Monster("Skeleton", [Stats("imgs/skeleton.", 1, ), Stats("imgs/skeleton.", 2, ), Stats("imgs/skeleton.", 3, )]),
-    Monster("Orc", [Stats("imgs/orc.", 1, ), Stats("imgs/orc.", 2, ), Stats("imgs/orc.", 3, )]),
-    Monster("Ogre", [Stats("imgs/ogre.", 1, ), Stats("imgs/ogre.", 2, ), Stats("imgs/ogre.", 3, )]),
-    Monster("Troll", [Stats("imgs/troll.", 1, ), Stats("imgs/troll.", 2, ), Stats("imgs/troll.", 3, )]),
-    Monster("Wolf", [Stats("imgs/wolf.", 1, ), Stats("imgs/wolf.", 2, ), Stats("imgs/wolf.", 3, )])
+    Monster("Witch", [Stats("imgs/witch.png", 1, 1, 1, 3, 5), Stats("imgs/witch.png", 2, 2, 2, 4, 5), Stats("imgs/witch.png", 3, 2, 2, 4, 10)]),
+    Monster("Orc", [Stats("imgs/orc.png", 1, 1, 3, 1, 5), Stats("imgs/orc.png", 2, 2, 4, 2, 5), Stats("imgs/orc.png", 3, 2, 4, 2, 10)]),
+    Monster("Ogre", [Stats("imgs/ogre.png", 1, 4, 1, 0, 5), Stats("imgs/ogre.png", 2, 5, 3, 0, 5), Stats("imgs/ogre.png", 3, 5, 3, 0, 10)]),
+    Monster("Troll", [Stats("imgs/troll.png", 1, 3, 1, 1, 5), Stats("imgs/troll.png", 2, 4, 2, 2, 5), Stats("imgs/troll.png", 3, 4, 2, 2, 10)]),
+    Monster("Wolf", [Stats("imgs/wolf.png", 1, 2, 3, 0, 5), Stats("imgs/wolf.png", 2, 4, 4, 0, 5), Stats("imgs/wolf.png", 3, 4, 4, 0, 10)])
 ]
 
 bosses = [
-    Monster("Dragon", [Stats("imgs/dragon.", 1, ), Stats("imgs/dragon.", 2, ), Stats("imgs/dragon.", 3, )]),
-    Monster("Demon", [Stats("imgs/demon.", 1, ), Stats("imgs/demon.", 2, ), Stats("imgs/demon.", 3, )]),
-    Monster("Basalisk", [Stats("imgs/basalisk.", 1, ), Stats("imgs/basalisk.", 2, ), Stats("imgs/basalisk.", 3, )])
+    Monster("Dragon", [Stats("imgs/dragon.png", 4, 7, 2, 3, 15)]),
+    Monster("Demon", [Stats("imgs/demon.png", 4, 4, 2, 6, 15)]),
+    Monster("Basalisk", [Stats("imgs/basalisk.png", 4, 4, 4, 4, 15)])
 ]
