@@ -1,5 +1,6 @@
 import json
 from classes import *
+import pygame
 
 # TEST = Hero("Dev", "God", Stats("imgs/god.png", 1000, 100, 100, 100, 1000), {"close": Item("God Sword", "imgs/godsword.png", 1000),
 #     "range": Item("God Bow", "imgs/godbow.png", 1000), "mana": Item("God Staff", "imgs/godstaff.png", 1000), "defence": Item("God Armour", "imgs/godarmour.png", 1000)});TEST.xp = 1000;TEST.gold = 1000
@@ -16,9 +17,13 @@ def load_player_data(name: str) -> Hero:
     hero.gold = playerdata["gold"]
     return hero
 
-with open("playerdata.json", "r+") as f:
-    if not f.read():
-        json.dump({}, f, indent=4)
+def scale_rect(rect: pygame.Rect) -> pygame.Rect:
+    return pygame.Rect(rect.left * SCALEX, rect.top * SCALEY, rect.width * SCALEX, rect.height * SCALEY)
+
+def draw():
+    win.fill(pygame.color.THECOLORS["white"])
+
+    pygame.draw.rect(win, pygame.color.THECOLORS["red"], scale_rect(pygame.Rect(250, 175, 100, 100)))
 
 heros = [
     Hero(None, "Mage", Stats("imgs/mage.png", 1, 2, 3, 5, 10), dict(
@@ -60,3 +65,25 @@ bosses = [
     Monster("Demon", [Stats("imgs/demon.png", 4, 4, 2, 6, 15)]),
     Monster("Basalisk", [Stats("imgs/basalisk.png", 4, 4, 4, 4, 15)])
 ]
+
+with open("playerdata.json", "r+") as f:
+    if not f.read():
+        json.dump({}, f, indent=4)
+
+win = pygame.display.set_mode((1200, 675))
+SCALEX = pygame.display.Info().current_w / 1920
+SCALEY = pygame.display.Info().current_h / 1080
+print(SCALEX, SCALEY)
+clock = pygame.time.Clock()
+fps = 60
+run = True
+
+while run:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False  
+    
+    draw()
+    pygame.display.update()
+
+pygame.quit()
