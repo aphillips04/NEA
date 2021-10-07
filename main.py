@@ -1,7 +1,6 @@
 ### Imports ###
 import json
 from classes import *
-import pygame;pygame.init()
 
 ### Testing ###
 # TEST = Hero("Dev", "God", Stats("imgs/god.png", 1000, 100, 100, 100, 1000), {"close": Item("God Sword", "imgs/godsword.png", 1000),
@@ -63,31 +62,46 @@ def load_player_data(name: str) -> Hero:
     hero.gold = playerdata["gold"]
     return hero
 
-def scale_rect(rect: pygame.Rect) -> pygame.Rect:
-    return pygame.Rect(rect.left * SCALEX, rect.top * SCALEY, rect.width * SCALEX, rect.height * SCALEY)
+def scale_rect(rect: Union[tuple, pygame.Rect]) -> pygame.Rect:
+    return pygame.Rect(rect[0] * SCALEX, rect[1] * SCALEY, rect[2] * SCALEX, rect[3] * SCALEY)
 
 def draw():
     win.fill(pygame.color.THECOLORS["white"])
 
-    pygame.draw.rect(win, pygame.color.THECOLORS["red"], scale_rect(pygame.Rect(250, 175, 250, 150)))
+    #pygame.draw.rect(win, pygame.color.THECOLORS["red"], scale_rect(pygame.Rect(250, 175, 250, 150)))
+    inBox.draw(win)
 
-# If playerdata doesn't exist, create populate with an empty array
+def events(event):
+    inBox.handle_event(event)
+
+def logic():
+    ...
+
+    pygame.display.update()
+
+# If playerdata doesn't exist, create and populate with an empty array
 with open("playerdata.json", "r+") as f:
     if not f.read():
         json.dump({}, f, indent=4)
 
 ### Pygame Setup ###
+pygame.init()
 win = pygame.display.set_mode((1200, 675), pygame.FULLSCREEN)
 clock = pygame.time.Clock()
 run = True
+frame = 0
+inBox = InputBox(*scale_rect((200, 200, 500, 200)))
 
 while run:
+    frame = (frame + 1) % 60
     clock.tick(FPS)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            run = False  
+            run = False
+        
+        events(event)
     
     draw()
-    pygame.display.update()
+    logic()
 
 pygame.quit()
