@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 import json
-from typing import Annotated, Union
+from typing import Dict, List, Tuple, Union
 import pygame
-pygame.init()
+from pygame.constants import CONTROLLER_BUTTON_RIGHTSHOULDER, TIMER_RESOLUTION;pygame.init()
 
 @dataclass
 class Stats:
@@ -20,7 +20,7 @@ class Item:
     level: int
 
 class Hero:
-    def __init__(self, name: str, herotype: str, stats: Stats, items: Annotated[dict[str, Item], 4]) -> None:
+    def __init__(self, name: str, herotype: str, stats: Stats, items: Dict[str, Item]) -> None:
         self.name = name
         self.herotype = herotype
         self.stats = stats
@@ -73,18 +73,17 @@ class Hero:
         )))
 
 class Monster:
-    def __init__(self, monstertype: str, levels: Annotated[list[Stats], 3]) -> None:
+    def __init__(self, monstertype: str, levels: List[Stats]) -> None:
         self.monstertype = monstertype
         self.levels = levels
 
 class InputBox:
-    FONT = pygame.font.Font(None, 32)
-
-    def __init__(self, x, y, w, h, text=''):
+    def __init__(self, x, y, w, h, text='', font=None, font_size=32):
         self.rect = pygame.Rect(x, y, w, h)
-        self.color = pygame.Color('lightskyblue3')
+        self.FONT = pygame.font.Font(font, font_size)
+        self.color = pygame.Color("black")
         self.text = text
-        self.txt_surface = self.FONT.render(text, True, self.color)
+        self.txt_surface = self.FONT.render(text, False, self.color)
         self.active = False
 
     def handle_event(self, event):
@@ -95,8 +94,6 @@ class InputBox:
                 self.active = not self.active
             else:
                 self.active = False
-            # Change the current color of the input box.
-            self.color = pygame.Color('dodgerblue2') if self.active else pygame.Color('lightskyblue3')
         if event.type == pygame.KEYDOWN:
             if self.active:
                 if event.key == pygame.K_RETURN:
@@ -104,18 +101,31 @@ class InputBox:
                     self.text = ''
                 elif event.key == pygame.K_BACKSPACE:
                     self.text = self.text[:-1]
-                else:
+                elif len(self.text) < 11:
                     self.text += event.unicode
                 # Re-render the text.
-                self.txt_surface = self.FONT.render(self.text, True, self.color)
-
-    def update(self):
-        # Resize the box if the text is too long.
-        width = max(200, self.txt_surface.get_width()+10)
-        self.rect.w = width
+                self.txt_surface = self.FONT.render(self.text, False, self.color)
 
     def draw(self, screen):
         # Blit the text.
-        screen.blit(self.txt_surface, (self.rect.x+5, self.rect.y+5))
+        screen.blit(self.txt_surface, (self.rect.x, self.rect.y))
         # Blit the rect.
         pygame.draw.rect(screen, self.color, self.rect, 2)
+
+class Button:
+    def __init__(self, x, y, width, height, bg=(255, 255, 255), text="", font=None, font_size=32):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.bg = bg
+        self.text = text
+        self.FONT = pygame.font.Font(font, font_size)
+    
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(event.pos):
+                self.pressed()
+    
+    def pressed(self):
+        ...
+
+    def draw(self, win):
+        win.blit(self.bg)
