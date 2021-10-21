@@ -70,6 +70,7 @@ def draw():
 
     #pygame.draw.rect(win, pygame.color.THECOLORS["red"], scale_rect(pygame.Rect(250, 175, 250, 150)))
     inBox.draw(win)
+    test.draw(win)
 
 def events(event):
     inBox.handle_event(event)
@@ -86,11 +87,14 @@ with open("playerdata.json", "r+") as f:
 
 ### Pygame Setup ###
 pygame.init()
-win = pygame.display.set_mode((1200, 675), pygame.FULLSCREEN)
+win = pygame.display.set_mode((1200, 675))
 clock = pygame.time.Clock()
 run = True
 frame = 0
+
+
 inBox = InputBox(*scale_rect((200, 200, 500, 200)))
+test = Button(400, 400, 200, 200, "imgs/wolf.png", "bruh moment")
 
 while run:
     frame = (frame + 1) % 60

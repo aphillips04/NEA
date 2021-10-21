@@ -115,7 +115,11 @@ class InputBox:
 class Button:
     def __init__(self, x, y, width, height, bg=(255, 255, 255), text="", font=None, font_size=32):
         self.rect = pygame.Rect(x, y, width, height)
-        self.bg = bg
+        if type(bg) == str:
+            self.bg = pygame.image.load(bg)
+        elif type(bg) == tuple:
+            self.bg = pygame.Surface((int(self.rect.width), int(self.rect.height)))
+            self.bg.fill(bg)
         self.text = text
         self.FONT = pygame.font.Font(font, font_size)
     
@@ -128,4 +132,4 @@ class Button:
         ...
 
     def draw(self, win):
-        win.blit(self.bg)
+        win.blit(self.bg, self.rect)
