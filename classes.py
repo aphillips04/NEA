@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 import json
 from typing import Dict, List, Tuple, Union
-import pygame
-from pygame.constants import CONTROLLER_BUTTON_RIGHTSHOULDER, TIMER_RESOLUTION;pygame.init()
+import pygame;pygame.init()
 
 @dataclass
 class Stats:
@@ -78,38 +77,37 @@ class Monster:
         self.levels = levels
 
 class InputBox:
-    def __init__(self, x, y, w, h, text='', font=None, font_size=32):
+    def __init__(self, x, y, w, h, text='', font=None, font_size=32, return_func=None):
         self.rect = pygame.Rect(x, y, w, h)
         self.FONT = pygame.font.Font(font, font_size)
         self.color = pygame.Color("black")
         self.text = text
         self.txt_surface = self.FONT.render(text, False, self.color)
         self.active = False
+        self.return_func = return_func
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
-            # If the user clicked on the input_box rect.
             if self.rect.collidepoint(event.pos):
-                # Toggle the active variable.
                 self.active = not self.active
             else:
                 self.active = False
         if event.type == pygame.KEYDOWN:
             if self.active:
                 if event.key == pygame.K_RETURN:
-                    print(self.text)
+                    if self.return_func != None:
+                        self.return_func()
+                    else:
+                        print(self.text)
                     self.text = ''
                 elif event.key == pygame.K_BACKSPACE:
                     self.text = self.text[:-1]
-                elif len(self.text) < 11:
+                elif len(self.text) < 10:
                     self.text += event.unicode
-                # Re-render the text.
                 self.txt_surface = self.FONT.render(self.text, False, self.color)
 
     def draw(self, screen):
-        # Blit the text.
         screen.blit(self.txt_surface, (self.rect.x, self.rect.y))
-        # Blit the rect.
         pygame.draw.rect(screen, self.color, self.rect, 2)
 
 class Button:

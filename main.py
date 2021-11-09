@@ -1,5 +1,7 @@
 ### Imports ###
 import json
+
+from pygame.transform import scale
 from classes import *
 
 ### Testing ###
@@ -48,6 +50,7 @@ bosses = [
 ]
 SCALEX = pygame.display.Info().current_w / 1920
 SCALEY = pygame.display.Info().current_h / 1080
+print(SCALEX, SCALEY)
 FPS = 60
 
 ### Functions ###
@@ -87,14 +90,13 @@ with open("playerdata.json", "r+") as f:
 
 ### Pygame Setup ###
 pygame.init()
-win = pygame.display.set_mode((1200, 675))
+win = pygame.display.set_mode((1920, 1080))
 clock = pygame.time.Clock()
 run = True
 frame = 0
 
-
-inBox = InputBox(*scale_rect((200, 200, 500, 200)))
-test = Button(400, 400, 200, 200, "imgs/wolf.png", "bruh moment")
+inBox = InputBox(*scale_rect((530, 200, 860, 100)), "", "Emulogic.ttf", 85)
+test = Button(400, 400, 200, 200, (254, 165, 136), "bruh moment")
 
 while run:
     frame = (frame + 1) % 60
