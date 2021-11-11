@@ -77,9 +77,9 @@ class Monster:
         self.levels = levels
 
 class InputBox:
-    def __init__(self, x, y, w, h, text='', font=None, font_size=32, return_func=None):
+    def __init__(self, x, y, w, h, screen, text='', font=None, font_size=32, return_func=None):
         self.rect = pygame.Rect(x, y, w, h)
-        self.FONT = pygame.font.Font(font, font_size)
+        self.FONT = pygame.font.Font(font, font_size*screen.get_height()//1080)
         self.color = pygame.Color("black")
         self.text = text
         self.txt_surface = self.FONT.render(text, False, self.color)
@@ -105,8 +105,14 @@ class InputBox:
                 elif len(self.text) < 10:
                     self.text += event.unicode
                 self.txt_surface = self.FONT.render(self.text, False, self.color)
+    
+    def scale_font(self, screen):
+        twidth, theight = self.txt_surface.get_size()
+        swidth, sheight = screen.get_size()
+        self.txt_surface = pygame.transform.smoothscale(self.txt_surface, (twidth * swidth // 1920, theight * sheight // 1080))
 
     def draw(self, screen):
+        #self.scale_font(screen)
         screen.blit(self.txt_surface, (self.rect.x, self.rect.y))
         pygame.draw.rect(screen, self.color, self.rect, 2)
 

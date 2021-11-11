@@ -1,7 +1,5 @@
 ### Imports ###
 import json
-
-from pygame.transform import scale
 from classes import *
 
 ### Testing ###
@@ -72,11 +70,11 @@ def draw():
     win.fill(pygame.color.THECOLORS["white"])
 
     #pygame.draw.rect(win, pygame.color.THECOLORS["red"], scale_rect(pygame.Rect(250, 175, 250, 150)))
-    inBox.draw(win)
+    usernameInputBox.draw(win)
     test.draw(win)
 
 def events(event):
-    inBox.handle_event(event)
+    usernameInputBox.handle_event(event)
 
 def logic():
     ...
@@ -90,12 +88,12 @@ with open("playerdata.json", "r+") as f:
 
 ### Pygame Setup ###
 pygame.init()
-win = pygame.display.set_mode((1920, 1080))
+win = pygame.display.set_mode((pygame.display.Info().current_w, pygame.display.Info().current_h))
 clock = pygame.time.Clock()
 run = True
 frame = 0
 
-inBox = InputBox(*scale_rect((530, 200, 860, 100)), "", "Emulogic.ttf", 85)
+usernameInputBox = InputBox(*scale_rect((530, 200, 860, 100)), win, font="Emulogic.ttf", font_size=85)
 test = Button(400, 400, 200, 200, (254, 165, 136), "bruh moment")
 
 while run:
