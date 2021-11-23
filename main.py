@@ -1,11 +1,10 @@
 ### Imports ###
-import json
 from classes import *
 
 ### Testing ###
-# TEST = Hero("Dev", "God", Stats("imgs/god.png", 1000, 100, 100, 100, 1000), {"close": Item("God Sword", "imgs/godsword.png", 1000),
-#     "range": Item("God Bow", "imgs/godbow.png", 1000), "mana": Item("God Staff", "imgs/godstaff.png", 1000), "defence": Item("God Armour", "imgs/godarmour.png", 1000)});TEST.xp = 1000;TEST.gold = 1000
-# TEST.save_progress()
+TEST = Hero("Dev", "God", Stats("imgs/god.png", 1000, 100, 100, 100, 1000), {"close": Item("God Sword", "imgs/godsword.png", 1000),
+     "range": Item("God Bow", "imgs/godbow.png", 1000), "mana": Item("God Staff", "imgs/godstaff.png", 1000), "defence": Item("God Armour", "imgs/godarmour.png", 1000)});TEST.xp = 1000;TEST.gold = 1000
+TEST.save_progress()
 
 ### Constants ###
 heros = [
@@ -48,7 +47,7 @@ bosses = [
 ]
 SCALEX = pygame.display.Info().current_w / 1920
 SCALEY = pygame.display.Info().current_h / 1080
-print(SCALEX, SCALEY)
+print(94/SCALEY)
 FPS = 60
 
 ### Functions ###
@@ -71,10 +70,13 @@ def draw():
 
     #pygame.draw.rect(win, pygame.color.THECOLORS["red"], scale_rect(pygame.Rect(250, 175, 250, 150)))
     usernameInputBox.draw(win)
-    test.draw(win)
+    loadBtn.draw(win)
+    newBtn.draw(win)
 
 def events(event):
     usernameInputBox.handle_event(event)
+    loadBtn.handle_event(event)
+    newBtn.handle_event(event)
 
 def logic():
     ...
@@ -93,12 +95,14 @@ clock = pygame.time.Clock()
 run = True
 frame = 0
 
-usernameInputBox = InputBox(*scale_rect((530, 200, 860, 100)), win, font="Emulogic.ttf", font_size=85)
-test = Button(400, 400, 200, 200, (254, 165, 136), "bruh moment")
+usernameInputBox = InputBox(*scale_rect((530, 200, 880, 109)), win, font="Imagine.ttf", font_size=100)
+loadBtn = Button(*scale_rect((250, 650, 350, 200)), (254, 165, 136), "Load Game", font="Imagine.ttf", font_size=50)
+newBtn = Button(*scale_rect((1320, 650, 350, 200)), (254, 165, 136), "New Game", font="Imagine.ttf", font_size=50)
 
 while run:
     frame = (frame + 1) % 60
     clock.tick(FPS)
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
