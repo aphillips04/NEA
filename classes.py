@@ -77,9 +77,10 @@ class Monster:
         self.levels = levels
 
 class InputBox:
-    def __init__(self, x, y, w, h, screen, text='', font=None, font_size=32, return_func=None):
+    def __init__(self, x, y, w, h, win, text='', font=None, font_size=32, return_func=None):
+        print(win.get_height())
         self.rect = pygame.Rect(x, y, w, h)
-        self.FONT = pygame.font.Font(font, font_size*screen.get_height()//1080)
+        self.FONT = pygame.font.Font(font, int(font_size*(win.get_width()/1920)))
         self.color = pygame.Color("black")
         self.text = text
         self.txt_surface = self.FONT.render(text, False, self.color)
@@ -96,7 +97,7 @@ class InputBox:
             if self.active:
                 if event.key == pygame.K_RETURN:
                     if self.return_func != None:
-                        self.return_func()
+                        self.return_func(self)
                     else:
                         print(self.text)
                     self.text = ''
@@ -105,19 +106,13 @@ class InputBox:
                 elif len(self.text) < 10:
                     self.text += event.unicode
                 self.txt_surface = self.FONT.render(self.text, False, self.color)
-    
-    def scale_font(self, screen):
-        twidth, theight = self.txt_surface.get_size()
-        swidth, sheight = screen.get_size()
-        self.txt_surface = pygame.transform.smoothscale(self.txt_surface, (twidth * swidth // 1920, theight * sheight // 1080))
 
-    def draw(self, screen):
-        #self.scale_font(screen)
-        screen.blit(self.txt_surface, (self.rect.x, self.rect.y))
-        pygame.draw.rect(screen, self.color, self.rect, 2)
+    def draw(self, win):
+        win.blit(self.txt_surface, (self.rect.x+5, self.rect.y))
+        pygame.draw.rect(win, self.color, self.rect, 2)
 
 class Button:
-    def __init__(self, x, y, width, height, bg=(255, 255, 255), text="", font=None, font_size=32):
+    def __init__(self, x, y, width, height, bg=(255, 255, 255), text="", font=None, font_size=32, activated_func=None):
         self.rect = pygame.Rect(x, y, width, height)
         if type(bg) == str:
             self.bg = pygame.image.load(bg)
@@ -130,10 +125,10 @@ class Button:
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
-                self.pressed()
-    
-    def pressed(self):
-        ...
+                if self.func != None:
+                    self.func()
 
     def draw(self, win):
         win.blit(self.bg, self.rect)
+        txt_surface = self.FONT.render(self.text, False, (0,0,0))
+        win.blit(txt_surface, (self.rect.x, self.rect.y))

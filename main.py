@@ -47,7 +47,6 @@ bosses = [
 ]
 SCALEX = pygame.display.Info().current_w / 1920
 SCALEY = pygame.display.Info().current_h / 1080
-print(94/SCALEY)
 FPS = 60
 
 ### Functions ###
@@ -62,26 +61,26 @@ def load_player_data(name: str) -> Hero:
     hero.gold = playerdata["gold"]
     return hero
 
+def loadGame():
+    if len(usernameInputBox.text) > 1 and usernameInputBox.text.isalnum():
+        ...
+    
+def newGame():
+    ...
+
+def startScreen(event=None):
+    if event == None:
+        usernameInputBox.draw(win)
+        loadBtn.draw(win)
+        newBtn.draw(win)
+    else:
+        usernameInputBox.handle_event(event)
+        loadBtn.handle_event(event)
+        newBtn.handle_event(event)    
+
 def scale_rect(rect: Union[tuple, pygame.Rect]) -> pygame.Rect:
     return pygame.Rect(rect[0] * SCALEX, rect[1] * SCALEY, rect[2] * SCALEX, rect[3] * SCALEY)
 
-def draw():
-    win.fill(pygame.color.THECOLORS["white"])
-
-    #pygame.draw.rect(win, pygame.color.THECOLORS["red"], scale_rect(pygame.Rect(250, 175, 250, 150)))
-    usernameInputBox.draw(win)
-    loadBtn.draw(win)
-    newBtn.draw(win)
-
-def events(event):
-    usernameInputBox.handle_event(event)
-    loadBtn.handle_event(event)
-    newBtn.handle_event(event)
-
-def logic():
-    ...
-
-    pygame.display.update()
 
 # If playerdata doesn't exist, create and populate with an empty array
 with open("playerdata.json", "r+") as f:
@@ -94,10 +93,11 @@ win = pygame.display.set_mode((pygame.display.Info().current_w, pygame.display.I
 clock = pygame.time.Clock()
 run = True
 frame = 0
+current_screen = startScreen
 
-usernameInputBox = InputBox(*scale_rect((530, 200, 880, 109)), win, font="Imagine.ttf", font_size=100)
-loadBtn = Button(*scale_rect((250, 650, 350, 200)), (254, 165, 136), "Load Game", font="Imagine.ttf", font_size=50)
-newBtn = Button(*scale_rect((1320, 650, 350, 200)), (254, 165, 136), "New Game", font="Imagine.ttf", font_size=50)
+usernameInputBox = InputBox(*scale_rect((530, 200, 880, 109)), win, font="Imagine.ttf", font_size=141)
+loadBtn = Button(*scale_rect((250, 650, 350, 200)), (254, 165, 136), "Load Game", font="Imagine.ttf", font_size=50, activated_func=loadGame)
+newBtn = Button(*scale_rect((1320, 650, 350, 200)), (254, 165, 136), "New Game", font="Imagine.ttf", font_size=50, activated_func=newGame)
 
 while run:
     frame = (frame + 1) % 60
@@ -107,9 +107,10 @@ while run:
         if event.type == pygame.QUIT:
             run = False
         
-        events(event)
-    
-    draw()
-    logic()
+        current_screen(event)
+
+    win.fill(pygame.color.THECOLORS["white"])
+    current_screen()
+    pygame.display.update()
 
 pygame.quit()
