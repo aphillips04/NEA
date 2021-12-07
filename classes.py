@@ -45,7 +45,7 @@ class Hero:
                 itemtype = self.items[key].itemtype,
                 icon = self.items[key].icon,
                 level = self.items[key].level
-            ) for key in ("close", "range", "mana", "defence")},
+            ) for key in ("close", "range", "magical", "defence")},
             gold = self.gold
         )
         with open("playerdata.json", "w") as f:
@@ -67,7 +67,7 @@ class Hero:
                 itemtype = self.items[key].itemtype,
                 icon = self.items[key].icon,
                 level = self.items[key].level
-            ) for key in ("close", "range", "mana", "defence")},
+            ) for key in ("close", "range", "magical", "defence")},
             gold = self.gold
         )))
 
@@ -120,15 +120,18 @@ class Button:
             self.bg = pygame.Surface((int(self.rect.width), int(self.rect.height)))
             self.bg.fill(bg)
         self.text = text
+        self.font_size = font_size
         self.FONT = pygame.font.Font(font, font_size)
+        self.activated_func = activated_func
     
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
-                if self.func != None:
-                    self.func()
+                if self.activated_func != None:
+                    self.activated_func()
 
     def draw(self, win):
         win.blit(self.bg, self.rect)
-        txt_surface = self.FONT.render(self.text, False, (0,0,0))
-        win.blit(txt_surface, (self.rect.x, self.rect.y))
+        for i, line in enumerate(self.text.split("\n")):
+            txt_surface = self.FONT.render(line, False, (0,0,0))
+            win.blit(txt_surface, (self.rect.x+5, self.rect.y-5+1.57*self.font_size*i))

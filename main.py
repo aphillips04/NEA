@@ -1,35 +1,36 @@
 ### Imports ###
+from pygame.constants import GL_SHARE_WITH_CURRENT_CONTEXT
 from classes import *
 
 ### Testing ###
 TEST = Hero("Dev", "God", Stats("imgs/god.png", 1000, 100, 100, 100, 1000), {"close": Item("God Sword", "imgs/godsword.png", 1000),
-     "range": Item("God Bow", "imgs/godbow.png", 1000), "mana": Item("God Staff", "imgs/godstaff.png", 1000), "defence": Item("God Armour", "imgs/godarmour.png", 1000)});TEST.xp = 1000;TEST.gold = 1000
+     "range": Item("God Bow", "imgs/godbow.png", 1000), "magical": Item("God Staff", "imgs/godstaff.png", 1000), "defence": Item("God Armour", "imgs/godarmour.png", 1000)});TEST.xp = 1000;TEST.gold = 1000
 TEST.save_progress()
 
 ### Constants ###
 heros = [
     Hero(None, "Mage", Stats("imgs/mage.png", 1, 2, 3, 5, 10), dict(
-        close = None,
+        close = Item(None, None, None),
         range = Item("Bow", "imgs/bow.png", 1),
-        mana = Item("Wand", "imgs/wand.png", 2),
+        magical = Item("Wand", "imgs/wand.png", 2),
         defence = Item("Leather", "imgs/leather.png", 1)
     )),
     Hero(None, "Paladin", Stats("imgs/paladin.png", 1, 4, 4, 2, 10), dict(
         close = Item("Short Sword", "imgs/short_sword.png", 1),
-        range = None,
-        mana = Item("Amulet", "imgs/amulet.png", 1),
+        range = Item(None, None, None),
+        magical = Item("Amulet", "imgs/amulet.png", 1),
         defence = Item("Shield", "imgs/shield.png", 2)
     )),
     Hero(None, "Barbarian", Stats("imgs/barbarian.png", 1, 5, 4, 1, 10), dict(
         close = Item("Sword", "imgs/sword.png", 2),
-        range = None,
-        mana = Item("Amulet", "imgs/amulet.png", 1),
+        range = Item(None, None, None),
+        magical = Item("Amulet", "imgs/amulet.png", 1),
         defence = Item("Leather", "imgs/leather.png", 1)
     )),
     Hero(None, "Rogue", Stats("imgs/rogue.png", 1, 2, 5, 3, 10), dict(
-        close = None,
+        close = Item(None, None, None),
         range = Item("Crossbow", "imgs/crossbow.png", 2),
-        mana = Item("Amulet", "imgs/amulet.png", 1),
+        magical = Item("Amulet", "imgs/amulet.png", 1),
         defence = Item("Leather", "imgs/leather.png", 1)
     ))
 ]
@@ -62,11 +63,18 @@ def load_player_data(name: str) -> Hero:
     return hero
 
 def loadGame():
-    if len(usernameInputBox.text) > 1 and usernameInputBox.text.isalnum():
+    if len(usernameInputBox.text) > 3 and usernameInputBox.text.replace(" ", "").isalnum():
         ...
+    else:
+        ... # do a pop up window
     
 def newGame():
-    ...
+    print("cronge")
+    if len(usernameInputBox.text) > 3 and usernameInputBox.text.replace(" ", "").isalnum():
+        global current_screen
+        current_screen = hero_selection
+    else:
+        ... # do a pop up window
 
 def startScreen(event=None):
     if event == None:
@@ -77,6 +85,18 @@ def startScreen(event=None):
         usernameInputBox.handle_event(event)
         loadBtn.handle_event(event)
         newBtn.handle_event(event)    
+
+def hero_selection(event=None):
+    if event == None:
+        for i, btn in enumerate(["mage", "paladin", "barbarian", "rogue"]):
+            locals()[btn+"Btn"] = Button(*scale_rect((10+477.5*i, 10, 467.5, 1060)), (254, 165, 136), " "*(20-len(btn))+f"{btn}\n\n\n\n\n\nStrength: {heros[i].stats.strength}\nAgility: {heros[i].stats.agility}\nMana: {heros[i].stats.mana}"+"\n".join(f"{herotype}: {heros[i].items[j].itemtype}" for j, herotype in ["close", "range", "magical", "defence"]), font="Imagine.ttf", font_size=50, activated_func=None)
+            locals()[btn+"Btn"].draw(win)
+    else:
+        try:
+            for i, btn in enumerate(["mage", "paladin", "barbarian", "rogue"]):
+                locals()[btn+"Btn"].handle_event(event)
+        except KeyError:
+            pass
 
 def scale_rect(rect: Union[tuple, pygame.Rect]) -> pygame.Rect:
     return pygame.Rect(rect[0] * SCALEX, rect[1] * SCALEY, rect[2] * SCALEX, rect[3] * SCALEY)
@@ -93,7 +113,7 @@ win = pygame.display.set_mode((pygame.display.Info().current_w, pygame.display.I
 clock = pygame.time.Clock()
 run = True
 frame = 0
-current_screen = startScreen
+current_screen = hero_selection
 
 usernameInputBox = InputBox(*scale_rect((530, 200, 880, 109)), win, font="Imagine.ttf", font_size=141)
 loadBtn = Button(*scale_rect((250, 650, 350, 200)), (254, 165, 136), "Load Game", font="Imagine.ttf", font_size=50, activated_func=loadGame)
