@@ -1,5 +1,5 @@
 ### Imports ###
-from pygame.constants import GL_SHARE_WITH_CURRENT_CONTEXT
+from pygame.transform import scale
 from classes import *
 
 ### Testing ###
@@ -51,6 +51,8 @@ SCALEY = pygame.display.Info().current_h / 1080
 FPS = 60
 
 ### Functions ###
+loadImg = pygame.image.load
+scaleImg = pygame.transform.scale
 def load_player_data(name: str) -> Hero:
     with open("playerdata.json", "r") as f:
         data = json.load(f)
@@ -62,21 +64,22 @@ def load_player_data(name: str) -> Hero:
     hero.gold = playerdata["gold"]
     return hero
 
-def loadGame():
-    if len(usernameInputBox.text) > 3 and usernameInputBox.text.replace(" ", "").isalnum():
-        ...
-    else:
+def loadGame(obj):
+    global name, current_screen
+    hero = load_player_data(obj.text)
+    if hero == None:
         ... # do a pop up window
+    else:
+        current_screen = village_screen
     
-def newGame():
-    print("cronge")
-    if len(usernameInputBox.text) > 3 and usernameInputBox.text.replace(" ", "").isalnum():
-        global current_screen
+def newGame(obj):
+    global current_screen
+    if len(obj.text) > 3 and obj.text.replace(" ", "").isalnum():
         current_screen = hero_selection
     else:
         ... # do a pop up window
 
-def startScreen(event=None):
+def start_screen(event=None):
     if event == None:
         usernameInputBox.draw(win)
         loadBtn.draw(win)
@@ -84,19 +87,33 @@ def startScreen(event=None):
     else:
         usernameInputBox.handle_event(event)
         loadBtn.handle_event(event)
-        newBtn.handle_event(event)    
+        newBtn.handle_event(event)
+
+def hero_picked(obj):
+    global hero, current_screen
+    hero = heros[heros.index(obj.text.split("\n")[0])]
+    hero.name = usernameInputBox.text
+    current_screen = village_screen
 
 def hero_selection(event=None):
     if event == None:
         for i, btn in enumerate(["mage", "paladin", "barbarian", "rogue"]):
-            locals()[btn+"Btn"] = Button(*scale_rect((10+477.5*i, 10, 467.5, 1060)), (254, 165, 136), " "*(20-len(btn))+f"{btn}\n\n\n\n\n\nStrength: {heros[i].stats.strength}\nAgility: {heros[i].stats.agility}\nMana: {heros[i].stats.mana}"+"\n".join(f"{herotype}: {heros[i].items[j].itemtype}" for j, herotype in ["close", "range", "magical", "defence"]), font="Imagine.ttf", font_size=50, activated_func=None)
+            locals()[btn+"Btn"] = Button(*scale_rect((10+477.5*i, 10, 467.5, 1060)), win, (254, 165, 136), " "*(15-len(btn))+f"{btn}\n\n\n\n\n\nStrength: {heros[i].stats.strength}\nAgility: {heros[i].stats.agility}\nMana: {heros[i].stats.mana}\n"+"\n".join(f"{weapontype}: {heros[i].items[weapontype].itemtype}" for weapontype in ["close", "range", "magical", "defence"]), font="Imagine.ttf", font_size=60, secondary_size=40, activated_func=hero_picked)
             locals()[btn+"Btn"].draw(win)
+            win.blit(scaleImg(loadImg(heros[i].stats.icon), (450, 450)), scale_rect((20+477.5*i, 25, 0, 0)))
     else:
         try:
             for i, btn in enumerate(["mage", "paladin", "barbarian", "rogue"]):
                 locals()[btn+"Btn"].handle_event(event)
         except KeyError:
             pass
+
+def village_screen(event=None):
+    if event == None:
+        print(hero)
+        exit(0)
+    else:
+        ...
 
 def scale_rect(rect: Union[tuple, pygame.Rect]) -> pygame.Rect:
     return pygame.Rect(rect[0] * SCALEX, rect[1] * SCALEY, rect[2] * SCALEX, rect[3] * SCALEY)
@@ -113,11 +130,12 @@ win = pygame.display.set_mode((pygame.display.Info().current_w, pygame.display.I
 clock = pygame.time.Clock()
 run = True
 frame = 0
-current_screen = hero_selection
+current_screen = start_screen
+hero = None
 
 usernameInputBox = InputBox(*scale_rect((530, 200, 880, 109)), win, font="Imagine.ttf", font_size=141)
-loadBtn = Button(*scale_rect((250, 650, 350, 200)), (254, 165, 136), "Load Game", font="Imagine.ttf", font_size=50, activated_func=loadGame)
-newBtn = Button(*scale_rect((1320, 650, 350, 200)), (254, 165, 136), "New Game", font="Imagine.ttf", font_size=50, activated_func=newGame)
+loadBtn = Button(*scale_rect((250, 650, 350, 200)), win, (254, 165, 136), "Load Game", font="Imagine.ttf", font_size=50, activated_func=loadGame)
+newBtn = Button(*scale_rect((1320, 650, 350, 200)), win, (254, 165, 136), "New Game", font="Imagine.ttf", font_size=50, activated_func=newGame)
 
 while run:
     frame = (frame + 1) % 60

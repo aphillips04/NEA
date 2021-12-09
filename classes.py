@@ -78,7 +78,6 @@ class Monster:
 
 class InputBox:
     def __init__(self, x, y, w, h, win, text='', font=None, font_size=32, return_func=None):
-        print(win.get_height())
         self.rect = pygame.Rect(x, y, w, h)
         self.FONT = pygame.font.Font(font, int(font_size*(win.get_width()/1920)))
         self.color = pygame.Color("black")
@@ -112,7 +111,7 @@ class InputBox:
         pygame.draw.rect(win, self.color, self.rect, 2)
 
 class Button:
-    def __init__(self, x, y, width, height, bg=(255, 255, 255), text="", font=None, font_size=32, activated_func=None):
+    def __init__(self, x, y, width, height, win, bg=(255, 255, 255), text="", font=None, font_size=32, secondary_size=16, activated_func=None):
         self.rect = pygame.Rect(x, y, width, height)
         if type(bg) == str:
             self.bg = pygame.image.load(bg)
@@ -121,17 +120,21 @@ class Button:
             self.bg.fill(bg)
         self.text = text
         self.font_size = font_size
-        self.FONT = pygame.font.Font(font, font_size)
+        self.FONT = pygame.font.Font(font, int(font_size*(win.get_width()/1920)))
+        self.FONT2 = pygame.font.Font(font, int(secondary_size*(win.get_width()/1920)))
         self.activated_func = activated_func
     
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.rect.collidepoint(event.pos):
                 if self.activated_func != None:
-                    self.activated_func()
+                    self.activated_func(self)
 
     def draw(self, win):
         win.blit(self.bg, self.rect)
         for i, line in enumerate(self.text.split("\n")):
-            txt_surface = self.FONT.render(line, False, (0,0,0))
-            win.blit(txt_surface, (self.rect.x+5, self.rect.y-5+1.57*self.font_size*i))
+            if i < 1:
+                txt_surface = self.FONT.render(line, False, (0,0,0))
+            else:
+                txt_surface = self.FONT2.render(line, False, (0,0,0))
+            win.blit(txt_surface, (self.rect.x+5, self.rect.y-5+1.5*self.font_size*i))
