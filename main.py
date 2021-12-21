@@ -66,7 +66,7 @@ def load_player_data(name: str) -> Hero:
 
 def loadGame(obj):
     global name, current_screen
-    hero = load_player_data(obj.text)
+    hero = load_player_data(usernameInputBox.text)
     if hero == None:
         ... # do a pop up window
     else:
@@ -74,7 +74,7 @@ def loadGame(obj):
     
 def newGame(obj):
     global current_screen
-    if len(obj.text) > 3 and obj.text.replace(" ", "").isalnum():
+    if len(usernameInputBox.text) > 3 and usernameInputBox.text.replace(" ", "").isalnum():
         current_screen = hero_selection
     else:
         ... # do a pop up window
@@ -91,27 +91,27 @@ def start_screen(event=None):
 
 def hero_picked(obj):
     global hero, current_screen
-    hero = heros[heros.index(obj.text.split("\n")[0])]
+    hero = heros[["mage", "paladin", "barbarian", "rouge"].index(obj.text.strip().split("\n")[0])]
     hero.name = usernameInputBox.text
     current_screen = village_screen
 
 def hero_selection(event=None):
     if event == None:
-        for i, btn in enumerate(["mage", "paladin", "barbarian", "rogue"]):
-            locals()[btn+"Btn"] = Button(*scale_rect((10+477.5*i, 10, 467.5, 1060)), win, (254, 165, 136), " "*(15-len(btn))+f"{btn}\n\n\n\n\n\nStrength: {heros[i].stats.strength}\nAgility: {heros[i].stats.agility}\nMana: {heros[i].stats.mana}\n"+"\n".join(f"{weapontype}: {heros[i].items[weapontype].itemtype}" for weapontype in ["close", "range", "magical", "defence"]), font="Imagine.ttf", font_size=60, secondary_size=40, activated_func=hero_picked)
-            locals()[btn+"Btn"].draw(win)
-            win.blit(scaleImg(loadImg(heros[i].stats.icon), (450, 450)), scale_rect((20+477.5*i, 25, 0, 0)))
+        mageBtn.draw(win)
+        paladinBtn.draw(win)
+        barbarianBtn.draw(win)
+        rougeBtn.draw(win)
     else:
-        try:
-            for i, btn in enumerate(["mage", "paladin", "barbarian", "rogue"]):
-                locals()[btn+"Btn"].handle_event(event)
-        except KeyError:
-            pass
+        mageBtn.handle_event(event)
+        paladinBtn.handle_event(event)
+        barbarianBtn.handle_event(event)
+        rougeBtn.handle_event(event)
 
 def village_screen(event=None):
     if event == None:
         print(hero)
-        exit(0)
+        global run
+        run = False
     else:
         ...
 
@@ -126,7 +126,7 @@ with open("playerdata.json", "r+") as f:
 
 ### Pygame Setup ###
 pygame.init()
-win = pygame.display.set_mode((pygame.display.Info().current_w, pygame.display.Info().current_h))
+win = pygame.display.set_mode((pygame.display.Info().current_w, pygame.display.Info().current_h), display=0)
 clock = pygame.time.Clock()
 run = True
 frame = 0
@@ -136,6 +136,10 @@ hero = None
 usernameInputBox = InputBox(*scale_rect((530, 200, 880, 109)), win, font="Imagine.ttf", font_size=141)
 loadBtn = Button(*scale_rect((250, 650, 350, 200)), win, (254, 165, 136), "Load Game", font="Imagine.ttf", font_size=50, activated_func=loadGame)
 newBtn = Button(*scale_rect((1320, 650, 350, 200)), win, (254, 165, 136), "New Game", font="Imagine.ttf", font_size=50, activated_func=newGame)
+mageBtn = Button(*scale_rect((10, 10, 467.5, 1060)), win, (254, 165, 136), (" "*11)+f"mage\n\n\n\n\n\nStrength: {heros[0].stats.strength}\nAgility: {heros[0].stats.agility}\nMana: {heros[0].stats.mana}\n"+"\n".join(f"{weapontype}: {heros[0].items[weapontype].itemtype}" for weapontype in ["close", "range", "magical", "defence"]), font="Imagine.ttf", font_size=60, secondary_size=40, activated_func=hero_picked)
+paladinBtn = Button(*scale_rect((487.5, 10, 467.5, 1060)), win, (254, 165, 136), (" "*8)+f"paladin\n\n\n\n\n\nStrength: {heros[1].stats.strength}\nAgility: {heros[1].stats.agility}\nMana: {heros[1].stats.mana}\n"+"\n".join(f"{weapontype}: {heros[1].items[weapontype].itemtype}" for weapontype in ["close", "range", "magical", "defence"]), font="Imagine.ttf", font_size=60, secondary_size=40, activated_func=hero_picked)
+barbarianBtn = Button(*scale_rect((965, 10, 467.5, 1060)), win, (254, 165, 136), (" "*6)+f"barbarian\n\n\n\n\n\nStrength: {heros[2].stats.strength}\nAgility: {heros[2].stats.agility}\nMana: {heros[2].stats.mana}\n"+"\n".join(f"{weapontype}: {heros[2].items[weapontype].itemtype}" for weapontype in ["close", "range", "magical", "defence"]), font="Imagine.ttf", font_size=60, secondary_size=40, activated_func=hero_picked)
+rougeBtn = Button(*scale_rect((1442.5, 10, 467.5, 1060)), win, (254, 165, 136), (" "*10)+f"rouge\n\n\n\n\n\nStrength: {heros[3].stats.strength}\nAgility: {heros[3].stats.agility}\nMana: {heros[3].stats.mana}\n"+"\n".join(f"{weapontype}: {heros[3].items[weapontype].itemtype}" for weapontype in ["close", "range", "magical", "defence"]), font="Imagine.ttf", font_size=60, secondary_size=40, activated_func=hero_picked)
 
 while run:
     frame = (frame + 1) % 60

@@ -100,6 +100,7 @@ class InputBox:
                     else:
                         print(self.text)
                     self.text = ''
+                    self.active = False
                 elif event.key == pygame.K_BACKSPACE:
                     self.text = self.text[:-1]
                 elif len(self.text) < 10:
