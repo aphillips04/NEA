@@ -109,7 +109,7 @@ class InputBox:
 
     def draw(self, win):
         win.blit(self.txt_surface, (self.rect.x+5, self.rect.y))
-        pygame.draw.rect(win, self.color, self.rect, 2)
+        pygame.draw.rect(win, self.color, self.rect, 3)
 
 class Button:
     def __init__(self, x, y, width, height, win, bg=(255, 255, 255), text="", font=None, font_size=32, secondary_size=16, activated_func=None):
@@ -138,4 +138,4 @@ class Button:
                 txt_surface = self.FONT.render(line, False, (0,0,0))
             else:
                 txt_surface = self.FONT2.render(line, False, (0,0,0))
-            win.blit(txt_surface, (self.rect.x+5, self.rect.y-5+1.5*self.font_size*i))
+            win.blit(txt_surface, (self.rect.x+10, self.rect.y-5+1.5*self.font_size*i))
