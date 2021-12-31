@@ -124,7 +124,7 @@ def progressBar(colour, x, y, width, height, progress):
 def village_screen(event=None):
     if event == None:
         pygame.draw.rect(win, (0, 0, 0), (10, 10, 467.5, 1060), 5)
-        win.blit(scaleImg(loadImg("imgs/placeholder.png"), (350*SCALEX,350*SCALEY)), (68, 20))
+        win.blit(scaleImg(loadImg(hero.stats.icon), (350*SCALEX,350*SCALEY)), (68, 20))
         progressBar((0,255,0), *scale_rect((30, 385, 427.5, 75)), hero.xp/levelBoundaries[hero.stats.level-1])
         font = pygame.font.Font("Imagine.ttf", int(45*(win.get_width()/1920)))
         for i, line in enumerate((f"Strength: {hero.stats.strength}\nAgility: {hero.stats.agility}\nMana: {hero.stats.mana}\n"+"\n".join(f"{weapontype}: {hero.items[weapontype].itemtype}" for weapontype in ["close", "range", "magical", "defence"])+f"\nGold: {hero.gold}").split("\n")):
