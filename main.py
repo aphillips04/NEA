@@ -7,30 +7,45 @@ TEST = Hero("Dev", "God", Stats("imgs/god.png", 1000, 100, 100, 100, 1000), {"cl
 TEST.save_progress()
 
 ### Constants ###
+items = dict(
+    none = Item(None, None, None),
+    shortsword = Item("Short Sword", "imgs/short_sword.png", 1),
+    sword = Item("Sword", "imgs/sword.png", 2),
+    broadsword = Item("Broad Sword", "imgs/broad_sword.png", 3),
+    bow = Item("Bow", "imgs/bow.png", 1),
+    crossbow = Item("Crossbow", "imgs/crossbow.png", 2),
+    longbow = Item("Long Bow", "imgs/long_bow.png", 3),
+    amulet = Item("Amulet", "imgs/amulet.png", 1),
+    wand = Item("Wand", "imgs/wand.png", 2),
+    staff = Item("Staff", "imgs/staff.png", 3),
+    leather = Item("Leather", "imgs/leather.png", 1),
+    chainmail = Item("Chain Mail", "imgs/chain_mail.png", 2),
+    platearmour = Item("Plate Armour", "imgs/plate_armour.png", 3)
+)
 heros = [
     Hero(None, "Mage", Stats("imgs/mage.png", 1, 2, 3, 5, 10), dict(
-        close = Item(None, None, None),
-        range = Item("Bow", "imgs/bow.png", 1),
-        magical = Item("Wand", "imgs/wand.png", 2),
-        defence = Item("Leather", "imgs/leather.png", 1)
+        close = items["none"],
+        range = items["bow"],
+        magical = items["wand"],
+        defence = items["leather"]
     )),
     Hero(None, "Paladin", Stats("imgs/paladin.png", 1, 4, 4, 2, 10), dict(
-        close = Item("Short Sword", "imgs/short_sword.png", 1),
-        range = Item(None, None, None),
-        magical = Item("Amulet", "imgs/amulet.png", 1),
-        defence = Item("Shield", "imgs/shield.png", 2)
+        close = items["sword"],
+        range = items["none"],
+        magical = items["amulet"],
+        defence = items["chainmail"]
     )),
     Hero(None, "Barbarian", Stats("imgs/barbarian.png", 1, 5, 4, 1, 10), dict(
-        close = Item("Sword", "imgs/sword.png", 2),
-        range = Item(None, None, None),
-        magical = Item("Amulet", "imgs/amulet.png", 1),
-        defence = Item("Leather", "imgs/leather.png", 1)
+        close = items["sword"],
+        range = items["none"],
+        magical = items["amulet"],
+        defence = items["leather"]
     )),
     Hero(None, "Rogue", Stats("imgs/rogue.png", 1, 2, 5, 3, 10), dict(
-        close = Item(None, None, None),
-        range = Item("Crossbow", "imgs/crossbow.png", 2),
-        magical = Item("Amulet", "imgs/amulet.png", 1),
-        defence = Item("Leather", "imgs/leather.png", 1)
+        close = items["none"],
+        range = items["crossbow"],
+        magical = items["amulet"],
+        defence = items["leather"]
     ))
 ]
 monsters = [
@@ -49,6 +64,11 @@ levelBoundaries = [
     200,
     500,
     1000
+]
+maxHealths = [
+    10,
+    15,
+    20
 ]
 SCALEX = pygame.display.Info().current_w / 1920
 SCALEY = pygame.display.Info().current_h / 1080
@@ -117,6 +137,18 @@ def quitGame(obj):
     global run
     run = False
 
+def blacksmithsShop(obj):
+    global current_screen
+    current_screen = blacksmiths_screen
+
+def wizardsShop(obj):
+    global current_screen
+    current_screen = wizards_screen
+
+def dungeonEntrance(obj):
+    global current_screen
+    current_screen = dugeon_screen
+
 def progressBar(colour, x, y, width, height, progress):
     pygame.draw.rect(win, colour, (x, y, width*progress, height))
     pygame.draw.rect(win, (0,0,0), (x, y, width, height), 3)
@@ -139,6 +171,78 @@ def village_screen(event=None):
         wizardBtn.handle_event(event)
         blacksmithBtn.handle_event(event)
         quitBtn.handle_event(event)
+
+def blacksmiths_screen(event=None):
+    if event == None:
+        pygame.draw.rect(win, (0, 0, 0), (10, 10, 467.5, 1060), 5)
+        win.blit(scaleImg(loadImg(hero.stats.icon), (350*SCALEX,350*SCALEY)), (68, 20))
+        progressBar((0,255,0), *scale_rect((30, 385, 427.5, 75)), hero.xp/levelBoundaries[hero.stats.level-1])
+        title = pygame.font.Font("Imagine.ttf", int(125*(win.get_width()/1920)))
+        win.blit(title.render("Blacksmiths", False, (0,0,0)), (810, 7.5))
+        font = pygame.font.Font("Imagine.ttf", int(45*(win.get_width()/1920)))
+        for i, line in enumerate((f"Health: {hero.stats.health}/{maxHealths[hero.stats.level-1]}\nGold: {hero.gold}").split("\n")):
+            txt_surface = font.render(line, False, (0,0,0))
+            win.blit(txt_surface, (20, 475+75*i))
+        shortswordBtn.draw(win)
+        bowBtn.draw(win)
+        leatherBtn.draw(win)
+        swordBtn.draw(win)
+        crossbowBtn.draw(win)
+        chainmailBtn.draw(win)
+        broadswordBtn.draw(win)
+        longbowBtn.draw(win)
+        platearmourBtn.draw(win)
+    else:
+        shortswordBtn.handle_event(event)
+        bowBtn.handle_event(event)
+        leatherBtn.handle_event(event)
+        swordBtn.handle_event(event)
+        crossbowBtn.handle_event(event)
+        chainmailBtn.handle_event(event)
+        broadswordBtn.handle_event(event)
+        longbowBtn.handle_event(event)
+        platearmourBtn.handle_event(event)
+
+def wizards_screen(event=None):
+    if event == None:
+        pygame.draw.rect(win, (0, 0, 0), (10, 10, 467.5, 1060), 5)
+        win.blit(scaleImg(loadImg(hero.stats.icon), (350*SCALEX,350*SCALEY)), (68, 20))
+        progressBar((0,255,0), *scale_rect((30, 385, 427.5, 75)), hero.xp/levelBoundaries[hero.stats.level-1])
+        title = pygame.font.Font("Imagine.ttf", int(125*(win.get_width()/1920)))
+        win.blit(title.render("Wizards", False, (0,0,0)), (960, 7.5))
+        font = pygame.font.Font("Imagine.ttf", int(45*(win.get_width()/1920)))
+        for i, line in enumerate((f"Health: {hero.stats.health}/{maxHealths[hero.stats.level-1]}\nGold: {hero.gold}").split("\n")):
+            txt_surface = font.render(line, False, (0,0,0))
+            win.blit(txt_surface, (20, 475+75*i))
+        amuletBtn.draw(win)
+        wandBtn.draw(win)
+        staffBtn.draw(win)
+    else:
+        amuletBtn.handle_event(event)
+        wandBtn.handle_event(event)
+        staffBtn.handle_event(event)
+
+def dugeon_screen(event=None):
+    if event == None:
+        ...
+    else:
+        ...
+
+def purchase(obj):
+    item = obj.text.split("\n")[0].replace(" ", "")
+    cost = int(obj.text.split("\n")[1].split(" ")[1])
+    if hero.gold >= cost:
+        hero.gold -= cost
+        if item in ["shortsword", "sword", "broadsword"]:
+            hero.items["close"] = items[item]
+        elif item in ["bow", "crossbow", "longbow"]:
+            hero.items["range"] = items[item]
+        elif item in ["amulet", "wand", "staff"]:
+            hero.items["magical"] = items[item]
+        elif item in ["leather", "chaimail", "platearmour"]:
+            hero.items["defence"] = items[item]
+    else:
+        ... # do a pop up window
 
 def scale_rect(rect: Union[tuple, pygame.Rect]) -> pygame.Rect:
     return pygame.Rect(rect[0] * SCALEX, rect[1] * SCALEY, rect[2] * SCALEX, rect[3] * SCALEY)
@@ -166,12 +270,25 @@ paladinBtn = Button(*scale_rect((487.5, 10, 467.5, 1060)), win, (179, 213, 224),
 barbarianBtn = Button(*scale_rect((965, 10, 467.5, 1060)), win, (179, 213, 224), (" "*6)+f"barbarian\n\n\n\n\nStrength: {heros[2].stats.strength}\nAgility: {heros[2].stats.agility}\nMana: {heros[2].stats.mana}\n"+"\n".join(f"{weapontype}: {heros[2].items[weapontype].itemtype}" for weapontype in ["close", "range", "magical", "defence"]), font="Imagine.ttf", font_size=60, secondary_size=40, activated_func=heroPicked)
 rogueBtn = Button(*scale_rect((1442.5, 10, 467.5, 1060)), win, (179, 213, 224), (" "*10)+f"rogue\n\n\n\n\nStrength: {heros[3].stats.strength}\nAgility: {heros[3].stats.agility}\nMana: {heros[3].stats.mana}\n"+"\n".join(f"{weapontype}: {heros[3].items[weapontype].itemtype}" for weapontype in ["close", "range", "magical", "defence"]), font="Imagine.ttf", font_size=60, secondary_size=40, activated_func=heroPicked)
 
-dungeonBtn = Button(*scale_rect((800, 150, 300, 300)), win, (255, 255, 0), "dungeon", font="Imagine.ttf", font_size=50, activated_func=None)
-wizardBtn = Button(*scale_rect((1300, 150, 300, 300)), win, (255, 255, 0), "wizards", font="Imagine.ttf", font_size=50, activated_func=None)
-blacksmithBtn = Button(*scale_rect((800, 630, 300, 300)), win, (255, 255, 0), "black\nsmiths", font="Imagine.ttf", font_size=50, secondary_size=50, activated_func=None)
+dungeonBtn = Button(*scale_rect((800, 150, 300, 300)), win, (255, 255, 0), "dungeon", font="Imagine.ttf", font_size=50, activated_func=dungeonEntrance)
+wizardBtn = Button(*scale_rect((1300, 150, 300, 300)), win, (255, 255, 0), "wizards", font="Imagine.ttf", font_size=50, activated_func=wizardsShop)
+blacksmithBtn = Button(*scale_rect((800, 630, 300, 300)), win, (255, 255, 0), "black\nsmiths", font="Imagine.ttf", font_size=50, secondary_size=50, activated_func=blacksmithsShop)
 quitBtn = Button(*scale_rect((1300, 630, 300, 300)), win, (255, 255, 0), "Sleep", font="Imagine.ttf", font_size=50, activated_func=quitGame)
 
-print(SCALEX, SCALEY)
+shortswordBtn = Button(*scale_rect((775, 150, 250, 250)), win, (255, 255, 0), f"short sword\ncost: {(items['shortsword'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+bowBtn = Button(*scale_rect((1075, 150, 250, 250)), win, (255, 255, 0), f"bow\ncost: {(items['bow'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+leatherBtn = Button(*scale_rect((1375, 150, 250, 250)), win, (255, 255, 0), f"leather\ncost: {(items['leather'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+swordBtn = Button(*scale_rect((775, 450, 250, 250)), win, (255, 255, 0), f"sword\ncost: {(items['sword'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+crossbowBtn = Button(*scale_rect((1075, 450, 250, 250)), win, (255, 255, 0), f"cross bow\ncost: {(items['crossbow'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+chainmailBtn = Button(*scale_rect((1375, 450, 250, 250)), win, (255, 255, 0), f"chain mail\ncost: {(items['chainmail'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+broadswordBtn = Button(*scale_rect((775, 750, 250, 250)), win, (255, 255, 0), f"broad sword\ncost: {(items['broadsword'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+longbowBtn = Button(*scale_rect((1075, 750, 250, 250)), win, (255, 255, 0), f"long bow\ncost: {(items['longbow'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+platearmourBtn = Button(*scale_rect((1375, 750, 250, 250)), win, (255, 255, 0), f"plate armour\ncost: {(items['platearmour'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+
+amuletBtn = Button(*scale_rect((775, 450, 250, 250)), win, (255, 255, 0), f"amulet\ncost: {(items['amulet'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+wandBtn = Button(*scale_rect((1075, 450, 250, 250)), win, (255, 255, 0), f"wand\ncost: {(items['wand'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+staffBtn = Button(*scale_rect((1375, 450, 250, 250)), win, (255, 255, 0), f"staff\ncost: {(items['staff'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+
 while run:
     frame = (frame + 1) % 60
     clock.tick(FPS)
