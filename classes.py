@@ -26,6 +26,9 @@ class Hero:
         self.xp = 0
         self.items = items
         self.gold = 0
+        self.dungeonscleared = 0
+        self.monsterscleared = 0
+        self.bossescleared = 0
 
     def save_progress(self) -> None:
         with open("playerdata.json", "r") as f:
@@ -46,7 +49,8 @@ class Hero:
                 icon = self.items[key].icon,
                 level = self.items[key].level
             ) for key in ("close", "range", "magical", "defence")},
-            gold = self.gold
+            gold = self.gold,
+            dungeonscleared = self.dungeonscleared
         )
         with open("playerdata.json", "w") as f:
             json.dump(data, f, indent=4)
@@ -68,12 +72,15 @@ class Hero:
                 icon = self.items[key].icon,
                 level = self.items[key].level
             ) for key in ("close", "range", "magical", "defence")},
-            gold = self.gold
+            gold = self.gold,
+            dungeonscleared = self.dungeonscleared
         )))
 
 class Monster:
-    def __init__(self, monstertype: str, levels: List[Stats]) -> None:
+    def __init__(self, monstertype: str, attackname: str, defencename: str, levels: List[Stats]) -> None:
         self.monstertype = monstertype
+        self.attackname = attackname
+        self.defencename = defencename
         self.levels = levels
 
 class InputBox:
@@ -94,14 +101,7 @@ class InputBox:
                 self.active = False
         if event.type == pygame.KEYDOWN:
             if self.active:
-                if event.key == pygame.K_RETURN:
-                    if self.return_func != None:
-                        self.return_func(self)
-                    else:
-                        print(self.text)
-                    self.text = ''
-                    self.active = False
-                elif event.key == pygame.K_BACKSPACE:
+                if event.key == pygame.K_BACKSPACE:
                     self.text = self.text[:-1]
                 elif len(self.text) < 10:
                     self.text += event.unicode
@@ -112,7 +112,7 @@ class InputBox:
         pygame.draw.rect(win, self.color, self.rect, 3)
 
 class Button:
-    def __init__(self, x, y, width, height, win, bg=(255, 255, 255), text="", font=None, font_size=32, secondary_size=16, activated_func=None):
+    def __init__(self, x, y, width, height, win, bg=(255, 255, 255), text="", font=None, font_size=32, font_colour=(0, 0, 0), secondary_size=16, activated_func=None):
         self.rect = pygame.Rect(x, y, width, height)
         if type(bg) == str:
             self.bg = pygame.image.load(bg)
@@ -123,6 +123,7 @@ class Button:
         self.font_size = font_size
         self.FONT = pygame.font.Font(font, int(font_size*(win.get_width()/1920)))
         self.FONT2 = pygame.font.Font(font, int(secondary_size*(win.get_width()/1920)))
+        self.font_colour = font_colour
         self.activated_func = activated_func
     
     def handle_event(self, event):
@@ -135,7 +136,7 @@ class Button:
         win.blit(self.bg, self.rect)
         for i, line in enumerate(self.text.split("\n")):
             if i < 1:
-                txt_surface = self.FONT.render(line, False, (0,0,0))
+                txt_surface = self.FONT.render(line, False, self.font_colour)
             else:
-                txt_surface = self.FONT2.render(line, False, (0,0,0))
+                txt_surface = self.FONT2.render(line, False, self.font_colour)
             win.blit(txt_surface, (self.rect.x+10, self.rect.y-5+1.5*self.font_size*i))

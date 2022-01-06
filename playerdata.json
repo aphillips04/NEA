@@ -32,6 +32,43 @@
                 "level": 1000
             }
         },
-        "gold": 1000
+        "gold": 1000,
+        "dungeonscleared": 1000
+    },
+    "alex": {
+        "herotype": "Paladin",
+        "stats": {
+            "icon": "imgs/paladin.png",
+            "level": 3,
+            "strength": 4,
+            "agility": 4,
+            "mana": 2,
+            "health": 20
+        },
+        "xp": 1000,
+        "items": {
+            "close": {
+                "itemtype": "Broad Sword",
+                "icon": "imgs/broad_sword.png",
+                "level": 3
+            },
+            "range": {
+                "itemtype": "Long Bow",
+                "icon": "imgs/long_bow.png",
+                "level": 3
+            },
+            "magical": {
+                "itemtype": "Staff",
+                "icon": "imgs/staff.png",
+                "level": 3
+            },
+            "defence": {
+                "itemtype": "plate",
+                "icon": "imgs/plate_armour.png",
+                "level": 3
+            }
+        },
+        "gold": 237,
+        "dungeonscleared": 4
     }
 }
