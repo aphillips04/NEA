@@ -43,7 +43,7 @@
             "strength": 4,
             "agility": 4,
             "mana": 2,
-            "health": 20
+            "health": 15
         },
         "xp": 1000,
         "items": {
@@ -68,7 +68,43 @@
                 "level": 3
             }
         },
-        "gold": 237,
-        "dungeonscleared": 4
+        "gold": 509,
+        "dungeonscleared": 0
+    },
+    "bob": {
+        "herotype": "Paladin",
+        "stats": {
+            "icon": "imgs/paladin.png",
+            "level": 3,
+            "strength": 4,
+            "agility": 4,
+            "mana": 2,
+            "health": 20
+        },
+        "xp": 0,
+        "items": {
+            "close": {
+                "itemtype": "Broad Sword",
+                "icon": "imgs/broad_sword.png",
+                "level": 3
+            },
+            "range": {
+                "itemtype": null,
+                "icon": null,
+                "level": null
+            },
+            "magical": {
+                "itemtype": "Amulet",
+                "icon": "imgs/amulet.png",
+                "level": 1
+            },
+            "defence": {
+                "itemtype": "plate",
+                "icon": "imgs/plate_armour.png",
+                "level": 3
+            }
+        },
+        "gold": 0,
+        "dungeonscleared": 0
     }
 }

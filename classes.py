@@ -115,7 +115,7 @@ class Button:
     def __init__(self, x, y, width, height, win, bg=(255, 255, 255), text="", font=None, font_size=32, font_colour=(0, 0, 0), secondary_size=16, activated_func=None):
         self.rect = pygame.Rect(x, y, width, height)
         if type(bg) == str:
-            self.bg = pygame.image.load(bg)
+            self.bg = pygame.transform.scale(pygame.image.load(bg), (int(self.rect.width), int(self.rect.height)))
         elif type(bg) == tuple:
             self.bg = pygame.Surface((int(self.rect.width), int(self.rect.height)))
             self.bg.fill(bg)

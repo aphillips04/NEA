@@ -102,12 +102,13 @@ def load_player_data(name: str) -> Hero:
     return hero
 
 def loadGame(obj):
-    global name, current_screen, hero
+    global name, current_screen, hero, frame
     hero = load_player_data(usernameInputBox.text)
     if hero == None:
         mb.showerror("Missing Account", f"No account saved with the name \"{usernameInputBox.text}\"")
     else:
         current_screen = village_screen
+        frame = 0
     
 def newGame(obj):
     global current_screen
@@ -151,7 +152,7 @@ def hero_selection(event=None):
 
 def dungeonEntrance(obj):
     global current_screen
-    current_screen = dugeon_screen
+    current_screen = dungeon_screen
 
 def wizardsShop(obj):
     global current_screen
@@ -187,7 +188,7 @@ def village_screen(event=None):
         wizardBtn.draw(win)
         blacksmithBtn.draw(win)
         quitBtn.draw(win)
-        if hero.dungeonscleared == len(dungeonMonsters) and frame >= 15:
+        if hero.dungeonscleared == len(dungeonMonsters) and frame >= 15 and hero.stats.level >= len(levelBoundaries):
             mb.showinfo("You Win!", "Congratulations, you beat the game! Thanks for playing!")
             hero.dungeonscleared = len(dungeonMonsters)+1
     else:
@@ -263,6 +264,7 @@ def wizards_screen(event=None):
 
 def doAttack(obj):
     global monster, hero, current_screen
+    print(hero.items[obj.text].itemtype)
     if hero.items[obj.text].itemtype != None:
         dmg = (random.randint(0, 3) + (hero.stats.strength if obj.text != "magical" else hero.stats.mana) // 2 + hero.items[obj.text].level) - monster.levels[hero.stats.level-1].agility
         if dmg >= 0:
@@ -274,6 +276,7 @@ def doAttack(obj):
             if hero.stats.health <= 0:
                 hero.gold = 0
                 hero.stats.health = 5 + hero.stats.level*5
+                monster = None
                 toVillage(None)
         else:
             monster = None
@@ -289,16 +292,16 @@ def fleeFight(obj):
             hero.gold = 0
         toVillage(None)
 
-def dugeon_screen(event=None):
+def dungeon_screen(event=None):
     global monster, hero
     if event == None:
         if monster == None and hero.monsterscleared < dungeonMonsters[hero.dungeonscleared][0]:
-            dugeon_screen.monsterIndex = random.randint(0, len(monsters)-1)
-            monster = deepcopy(monsters[dugeon_screen.monsterIndex])
+            dungeon_screen.monsterIndex = random.randint(0, len(monsters)-1)
+            monster = deepcopy(monsters[dungeon_screen.monsterIndex])
             hero.monsterscleared += 1
         elif monster == None and hero.bossescleared < dungeonMonsters[hero.dungeonscleared][1]:
-            dugeon_screen.monsterIndex = random.randint(0, len(bosses)-1)
-            monster = deepcopy(bosses[dugeon_screen.monsterIndex])
+            dungeon_screen.monsterIndex = random.randint(0, len(bosses)-1)
+            monster = deepcopy(bosses[dungeon_screen.monsterIndex])
             hero.bossescleared += 1
         elif monster != None:
             pygame.draw.rect(win, (0, 0, 0), (10, 10, 467.5, 1060), 5)
@@ -308,12 +311,12 @@ def dugeon_screen(event=None):
             win.blit(title.render(monster.monstertype, False, (0,0,0)), (1010, 7.5))
             win.blit(scaleImg(loadImg(monster.levels[hero.stats.level-1].icon), (450*SCALEX,450*SCALEY)), (950, 225))
             if hero.bossescleared == 0:
-                progressBar((255,0,0), *scale_rect((950, 700, 450, 75)), monster.levels[hero.stats.level-1].health/monsters[dugeon_screen.monsterIndex].levels[hero.stats.level-1].health, f"{monster.levels[hero.stats.level-1].health}/{monsters[dugeon_screen.monsterIndex].levels[hero.stats.level-1].health}", "Imagine.ttf", 50)
+                progressBar((255,0,0), *scale_rect((950, 700, 450, 75)), monster.levels[hero.stats.level-1].health/monsters[dungeon_screen.monsterIndex].levels[hero.stats.level-1].health, f"{monster.levels[hero.stats.level-1].health}/{monsters[dungeon_screen.monsterIndex].levels[hero.stats.level-1].health}", "Imagine.ttf", 50)
             else:
-                progressBar((0,0,255), *scale_rect((950, 700, 450, 75)), monster.levels[hero.stats.level-1].health/bosses[dugeon_screen.monsterIndex].levels[hero.stats.level-1].health, f"{monster.levels[hero.stats.level-1].health}/{bosses[dugeon_screen.monsterIndex].levels[hero.stats.level-1].health}", "Imagine.ttf", 50)
+                progressBar((0,0,255), *scale_rect((950, 700, 450, 75)), monster.levels[hero.stats.level-1].health/bosses[dungeon_screen.monsterIndex].levels[hero.stats.level-1].health, f"{monster.levels[hero.stats.level-1].health}/{bosses[dungeon_screen.monsterIndex].levels[hero.stats.level-1].health}", "Imagine.ttf", 50)
             monsterFont = pygame.font.Font("Imagine.ttf", int(90*(win.get_width()/1920)))
-            win.blit(monsterFont.render(f"{monsters[dugeon_screen.monsterIndex].attackname}     +{monster.levels[hero.stats.level-1].strength}", False, (0,0,0)), (950, 800))
-            win.blit(monsterFont.render(f"{monsters[dugeon_screen.monsterIndex].defencename}     +{monster.levels[hero.stats.level-1].agility}", False, (0,0,0)), (950, 900))
+            win.blit(monsterFont.render(f"{monsters[dungeon_screen.monsterIndex].attackname}     +{monster.levels[hero.stats.level-1].strength}", False, (0,0,0)), (950, 800))
+            win.blit(monsterFont.render(f"{monsters[dungeon_screen.monsterIndex].defencename}     +{monster.levels[hero.stats.level-1].agility}", False, (0,0,0)), (950, 900))
             closeBtn.draw(win)
             rangeBtn.draw(win)
             magicBtn.draw(win)
@@ -323,16 +326,15 @@ def dugeon_screen(event=None):
                 txt_surface = font.render(line, False, (0,0,0))
                 win.blit(txt_surface, (20, 475+75*i))
         else:
-            if hero.stats.level <= len(levelBoundaries) and hero.dungeonscleared < len(dungeonMonsters)-1:
-                hero.xp += 5*dungeonMonsters[hero.dungeonscleared][0]
-                hero.xp += 15*dungeonMonsters[hero.dungeonscleared][1]
-                if hero.stats.level == len(levelBoundaries):
-                    hero.xp = levelBoundaries[-1]
-                elif hero.xp >= levelBoundaries[hero.stats.level-1]:
-                    hero.stats.level += 1
-                hero.dungeonscleared = (hero.dungeonscleared + 1) % 4
-            else:
-                hero.dungeonscleared += 1
+            hero.xp += 5*dungeonMonsters[hero.dungeonscleared][0]
+            hero.xp += 15*dungeonMonsters[hero.dungeonscleared][1]
+            hero.dungeonscleared = (hero.dungeonscleared + 1) % 4
+            if hero.stats.level == len(levelBoundaries) and hero.xp > levelBoundaries[-1]:
+                hero.xp = levelBoundaries[-1]
+                if hero.bossescleared > 0:
+                    hero.dungeonscleared = len(dungeonMonsters)
+            elif hero.xp >= levelBoundaries[hero.stats.level-1]:
+                hero.stats.level += 1
             toVillage(None)
     else:
         closeBtn.handle_event(event)
@@ -395,7 +397,7 @@ blacksmithBtn = Button(*scale_rect((800, 630, 300, 300)), win, (255, 255, 0), "b
 quitBtn = Button(*scale_rect((1300, 630, 300, 300)), win, (255, 255, 0), "Sleep", font="Imagine.ttf", font_size=50, activated_func=quitGame)
 
 # Shops
-shortswordBtn = Button(*scale_rect((775, 150, 250, 250)), win, (255, 255, 0), f"short sword\ncost: {(items['shortsword'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+shortswordBtn = Button(*scale_rect((775, 150, 250, 250)), win, "imgs/short_sword.png", f"short sword\ncost: {(items['shortsword'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
 swordBtn = Button(*scale_rect((1075, 150, 250, 250)), win, (255, 255, 0), f"sword\ncost: {(items['sword'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
 broadswordBtn = Button(*scale_rect((1375, 150, 250, 250)), win, (255, 255, 0), f"broad sword\ncost: {(items['broadsword'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
 bowBtn = Button(*scale_rect((775, 450, 250, 250)), win, (255, 255, 0), f"bow\ncost: {(items['bow'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
