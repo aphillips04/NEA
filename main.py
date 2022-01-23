@@ -26,7 +26,7 @@ items = dict(
     staff = Item("Staff", "imgs/staff.png", 3),
     leather = Item("Leather", "imgs/leather.png", 1),
     chainmail = Item("Chain Mail", "imgs/chain_mail.png", 2),
-    plate = Item("plate", "imgs/plate_armour.png", 3)
+    plate = Item("plate", "imgs/plate.png", 3)
 )
 heros = [
     Hero(None, "Mage", Stats("imgs/mage.png", 1, 2, 3, 5, 10), dict(
@@ -144,6 +144,8 @@ def hero_selection(event=None):
         paladinBtn.draw(win)
         barbarianBtn.draw(win)
         rogueBtn.draw(win)
+        for i, hero in enumerate(heros):
+            win.blit(scaleImg(loadImg(hero.stats.icon), (400*SCALEX, 400*SCALEY)), (10+487.5*i,50))
     else:
         mageBtn.handle_event(event)
         paladinBtn.handle_event(event)
@@ -188,7 +190,7 @@ def village_screen(event=None):
         wizardBtn.draw(win)
         blacksmithBtn.draw(win)
         quitBtn.draw(win)
-        if hero.dungeonscleared == len(dungeonMonsters) and frame >= 15 and hero.stats.level >= len(levelBoundaries):
+        if hero.dungeonscleared == len(dungeonMonsters) and frame >= 30 and hero.stats.level >= len(levelBoundaries):
             mb.showinfo("You Win!", "Congratulations, you beat the game! Thanks for playing!")
             hero.dungeonscleared = len(dungeonMonsters)+1
     else:
@@ -264,7 +266,6 @@ def wizards_screen(event=None):
 
 def doAttack(obj):
     global monster, hero, current_screen
-    print(hero.items[obj.text].itemtype)
     if hero.items[obj.text].itemtype != None:
         dmg = (random.randint(0, 3) + (hero.stats.strength if obj.text != "magical" else hero.stats.mana) // 2 + hero.items[obj.text].level) - monster.levels[hero.stats.level-1].agility
         if dmg >= 0:
@@ -391,24 +392,24 @@ barbarianBtn = Button(*scale_rect((965, 10, 467.5, 1060)), win, (179, 213, 224),
 rogueBtn = Button(*scale_rect((1442.5, 10, 467.5, 1060)), win, (179, 213, 224), (" "*10)+f"rogue\n\n\n\n\nStrength: {heros[3].stats.strength}\nAgility: {heros[3].stats.agility}\nMana: {heros[3].stats.mana}\n"+"\n".join(f"{weapontype}: {heros[3].items[weapontype].itemtype}" for weapontype in ["close", "range", "magical", "defence"]), font="Imagine.ttf", font_size=60, secondary_size=40, activated_func=heroPicked)
 
 # Village Screen
-dungeonBtn = Button(*scale_rect((800, 150, 300, 300)), win, (255, 255, 0), "dungeon", font="Imagine.ttf", font_size=50, activated_func=dungeonEntrance)
-wizardBtn = Button(*scale_rect((1300, 150, 300, 300)), win, (255, 255, 0), "wizards", font="Imagine.ttf", font_size=50, activated_func=wizardsShop)
-blacksmithBtn = Button(*scale_rect((800, 630, 300, 300)), win, (255, 255, 0), "black\nsmiths", font="Imagine.ttf", font_size=50, secondary_size=50, activated_func=blacksmithsShop)
-quitBtn = Button(*scale_rect((1300, 630, 300, 300)), win, (255, 255, 0), "Sleep", font="Imagine.ttf", font_size=50, activated_func=quitGame)
+dungeonBtn = Button(*scale_rect((800, 150, 300, 300)), win, "imgs/dungeon.png", activated_func=dungeonEntrance)
+wizardBtn = Button(*scale_rect((1300, 150, 300, 300)), win, "imgs/wizards.png", activated_func=wizardsShop)
+blacksmithBtn = Button(*scale_rect((800, 630, 300, 300)), win, "imgs/blacksmiths.png", activated_func=blacksmithsShop)
+quitBtn = Button(*scale_rect((1300, 630, 300, 300)), win, "imgs/quit.png", activated_func=quitGame)
 
 # Shops
 shortswordBtn = Button(*scale_rect((775, 150, 250, 250)), win, "imgs/short_sword.png", f"short sword\ncost: {(items['shortsword'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
-swordBtn = Button(*scale_rect((1075, 150, 250, 250)), win, (255, 255, 0), f"sword\ncost: {(items['sword'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
-broadswordBtn = Button(*scale_rect((1375, 150, 250, 250)), win, (255, 255, 0), f"broad sword\ncost: {(items['broadsword'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
-bowBtn = Button(*scale_rect((775, 450, 250, 250)), win, (255, 255, 0), f"bow\ncost: {(items['bow'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
-crossbowBtn = Button(*scale_rect((1075, 450, 250, 250)), win, (255, 255, 0), f"cross bow\ncost: {(items['crossbow'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
-longbowBtn = Button(*scale_rect((1375, 450, 250, 250)), win, (255, 255, 0), f"long bow\ncost: {(items['longbow'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
-leatherBtn = Button(*scale_rect((775, 750, 250, 250)), win, (255, 255, 0), f"leather\ncost: {(items['leather'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
-chainmailBtn = Button(*scale_rect((1075, 750, 250, 250)), win, (255, 255, 0), f"chain mail\ncost: {(items['chainmail'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
-plateBtn = Button(*scale_rect((1375, 750, 250, 250)), win, (255, 255, 0), f"plate\ncost: {(items['plate'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
-amuletBtn = Button(*scale_rect((775, 450, 250, 250)), win, (255, 255, 0), f"amulet\ncost: {(items['amulet'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
-wandBtn = Button(*scale_rect((1075, 450, 250, 250)), win, (255, 255, 0), f"wand\ncost: {(items['wand'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
-staffBtn = Button(*scale_rect((1375, 450, 250, 250)), win, (255, 255, 0), f"staff\ncost: {(items['staff'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+swordBtn = Button(*scale_rect((1075, 150, 250, 250)), win, "imgs/sword.png", f"sword\ncost: {(items['sword'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+broadswordBtn = Button(*scale_rect((1375, 150, 250, 250)), win, "imgs/broad_sword.png", f"broad sword\ncost: {(items['broadsword'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+bowBtn = Button(*scale_rect((775, 450, 250, 250)), win, "imgs/bow.png", f"bow\ncost: {(items['bow'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+crossbowBtn = Button(*scale_rect((1075, 450, 250, 250)), win, "imgs/crossbow.png", f"cross bow\ncost: {(items['crossbow'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+longbowBtn = Button(*scale_rect((1375, 450, 250, 250)), win, "imgs/long_bow.png", f"long bow\ncost: {(items['longbow'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+leatherBtn = Button(*scale_rect((775, 750, 250, 250)), win, "imgs/leather.png", f"leather\ncost: {(items['leather'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+chainmailBtn = Button(*scale_rect((1075, 750, 250, 250)), win, "imgs/chain_mail.png", f"chain mail\ncost: {(items['chainmail'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+plateBtn = Button(*scale_rect((1375, 750, 250, 250)), win, "imgs/plate.png", f"plate\ncost: {(items['plate'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+amuletBtn = Button(*scale_rect((775, 450, 250, 250)), win, "imgs/amulet.png", f"amulet\ncost: {(items['amulet'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+wandBtn = Button(*scale_rect((1075, 450, 250, 250)), win, "imgs/wand.png", f"wand\ncost: {(items['wand'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
+staffBtn = Button(*scale_rect((1375, 450, 250, 250)), win, "imgs/staff.png", f"staff\ncost: {(items['staff'].level**2)*5}", font="Imagine.ttf", font_size=34, secondary_size=24, activated_func=purchase)
 backBtn = Button(*scale_rect((1857.5, 7.5, 50, 50)), win, activated_func=toVillage)
 
 # Dungeon
