@@ -81,31 +81,31 @@
             "mana": 3,
             "health": 10
         },
-        "xp": 25,
+        "xp": 105,
         "items": {
             "close": {
-                "itemtype": null,
-                "icon": null,
-                "level": null
+                "itemtype": "Broad Sword",
+                "icon": "imgs/broad_sword.png",
+                "level": 3
             },
             "range": {
-                "itemtype": "Crossbow",
-                "icon": "imgs/crossbow.png",
-                "level": 2
+                "itemtype": "Long Bow",
+                "icon": "imgs/long_bow.png",
+                "level": 3
             },
             "magical": {
-                "itemtype": "Amulet",
-                "icon": "imgs/amulet.png",
-                "level": 1
+                "itemtype": "Staff",
+                "icon": "imgs/staff.png",
+                "level": 3
             },
             "defence": {
-                "itemtype": "Leather",
-                "icon": "imgs/leather.png",
-                "level": 1
+                "itemtype": "plate",
+                "icon": "imgs/plate.png",
+                "level": 3
             }
         },
-        "gold": 25,
-        "dungeonscleared": 1
+        "gold": 0,
+        "dungeonscleared": 3
     },
     "test": {
         "herotype": "Barbarian",
@@ -142,5 +142,77 @@
         },
         "gold": 50,
         "dungeonscleared": 0
+    },
+    "Dad": {
+        "herotype": "Mage",
+        "stats": {
+            "icon": "imgs/mage.png",
+            "level": 1,
+            "strength": 2,
+            "agility": 3,
+            "mana": 5,
+            "health": 10
+        },
+        "xp": 105,
+        "items": {
+            "close": {
+                "itemtype": "Broad Sword",
+                "icon": "imgs/broad_sword.png",
+                "level": 3
+            },
+            "range": {
+                "itemtype": "Long Bow",
+                "icon": "imgs/long_bow.png",
+                "level": 3
+            },
+            "magical": {
+                "itemtype": "Staff",
+                "icon": "imgs/staff.png",
+                "level": 3
+            },
+            "defence": {
+                "itemtype": "plate",
+                "icon": "imgs/plate.png",
+                "level": 3
+            }
+        },
+        "gold": 0,
+        "dungeonscleared": 3
+    },
+    "suzanne": {
+        "herotype": "Barbarian",
+        "stats": {
+            "icon": "imgs/barbarian.png",
+            "level": 1,
+            "strength": 5,
+            "agility": 4,
+            "mana": 1,
+            "health": 10
+        },
+        "xp": 105,
+        "items": {
+            "close": {
+                "itemtype": "Broad Sword",
+                "icon": "imgs/broad_sword.png",
+                "level": 3
+            },
+            "range": {
+                "itemtype": null,
+                "icon": null,
+                "level": null
+            },
+            "magical": {
+                "itemtype": "Amulet",
+                "icon": "imgs/amulet.png",
+                "level": 1
+            },
+            "defence": {
+                "itemtype": "plate",
+                "icon": "imgs/plate.png",
+                "level": 3
+            }
+        },
+        "gold": 0,
+        "dungeonscleared": 3
     }
 }

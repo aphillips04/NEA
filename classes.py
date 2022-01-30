@@ -90,22 +90,15 @@ class InputBox:
         self.color = pygame.Color("black")
         self.text = text
         self.txt_surface = self.FONT.render(text, False, self.color)
-        self.active = False
         self.return_func = return_func
 
     def handle_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.rect.collidepoint(event.pos):
-                self.active = not self.active
-            else:
-                self.active = False
         if event.type == pygame.KEYDOWN:
-            if self.active:
-                if event.key == pygame.K_BACKSPACE:
-                    self.text = self.text[:-1]
-                elif len(self.text) < 10:
-                    self.text += event.unicode
-                self.txt_surface = self.FONT.render(self.text, False, self.color)
+            if event.key == pygame.K_BACKSPACE:
+                self.text = self.text[:-1]
+            elif len(self.text) < 10:
+                self.text += event.unicode.lower()
+            self.txt_surface = self.FONT.render(self.text, False, self.color)
 
     def draw(self, win):
         win.blit(self.txt_surface, (self.rect.x+5, self.rect.y))
